@@ -1,18 +1,18 @@
 var svgWidth = 960;
-var svgHeight = 500;
+var svgHeight = 600;
 
 var margin = {
-  top: 20,
-  right: 40,
-  bottom: 60,
-  left: 100
+  top: 28,
+  right: 28,
+  bottom: 28,
+  left: 28
 };
 
 var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
 // Create an SVG wrapper, append an SVG group that will hold our chart, and shift the latter by left and top margins.
-var svg = d3.select("body")
+var svg = d3.select("#scatter")
   .append("svg")
   .attr("width", svgWidth)
   .attr("height", svgHeight);
@@ -31,9 +31,22 @@ d3.csv("data.csv").then(function(yourData) {
 
     console.log(yourData); //ALL the data is present now (not just smnokes and age)
 
+    //looking at max and min for fun
+    var ageMax = d3.max(yourData, function(d) { return +d.age;} );
+    console.log(ageMax); //max age is 44.1
+
+    var ageMin= d3.min(yourData, function(d) { return +d.age;} );
+    console.log(ageMin); //min age is 30.5
+
+    var smokeMax = d3.max(yourData, function(d) { return +d.smokes;} );
+    console.log(smokeMax); //max smoke % is 26.7
+
+    var smokeMin= d3.min(yourData, function(d) { return +d.smokes;} );
+    console.log(smokeMin); //min smoke % is 9.7
+
     //x will be smokers, y will be age
     var xLinearScale = d3.scaleLinear()
-        .domain([20, d3.max(yourData, d => d.smokes)]) //NO IDEA IF 20 IS THE RIGHT NUMBER
+        .domain([9, d3.max(yourData, d => d.smokes)]) //9 seems to get the circles into the right spot 
         .range([0, width]);  // NO IDEA IF 0 IS THE RIGHT NUMBER
     
     var yLinearScale = d3.scaleLinear()
@@ -68,7 +81,7 @@ d3.csv("data.csv").then(function(yourData) {
       .attr("class" , "tooltip")
       .offset([80, -60])
       .html(function(d) {
-        return(`${d.abbr}<br> Median Age: ${d.age}<br>Smokers %: ${d.smokes}`);
+        return(`${d.state}<br> Median Age: ${d.age}<br>Smokers %: ${d.smokes}`);
       }); //THIS GIVES YOU TEXT WHEN YOU CLICK ON A BUBBLE 
 
       chartGroup.call(toolTip); 
