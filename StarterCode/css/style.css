@@ -43,3 +43,10 @@ body {
   border: 0;
   border-radius: 10px;
 }
+
+.axisText {
+  font-family: sans-serif;
+  font-weight: bold;
+  fill: #551aaf;
+  text-anchor: middle;
+}
