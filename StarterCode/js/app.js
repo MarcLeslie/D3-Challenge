@@ -1,4 +1,4 @@
-var svgWidth = 960;
+var svgWidth = 970;
 var svgHeight = 600;
 
 var margin = {
@@ -46,7 +46,7 @@ d3.csv("data.csv").then(function(yourData) {
 
     //x will be smokers, y will be age
     var xLinearScale = d3.scaleLinear()
-        .domain([9, d3.max(yourData, d => d.smokes)]) //9 seems to get the circles into the right spot 
+        .domain([9, d3.max(yourData, d => d.smokes)]) //9 seems to get the circles into the right spot - 9.7 is the min smoker %
         .range([0, width]);  // NO IDEA IF 0 IS THE RIGHT NUMBER
     
     var yLinearScale = d3.scaleLinear()
@@ -72,16 +72,17 @@ d3.csv("data.csv").then(function(yourData) {
         .append("circle")
         .attr("cx" , d => xLinearScale(d.smokes))
         .attr("cy" , d => yLinearScale(d.age))
-        .attr("r" , "15")
+        .attr("r" , "15") //r stands for radius
         .attr("fill", "red")
+        .style("stroke" , "black") //adds border to circles 
         .attr("opacity" , ".8"); 
 
    // Initialize tool tip, event listeners, etc.
     var toolTip = d3.tip()
       .attr("class" , "tooltip")
-      .offset([80, -60])
+      .offset([80, -60]) //MESS WITH THIS
       .html(function(d) {
-        return(`${d.state}<br> Median Age: ${d.age}<br>Smokers %: ${d.smokes}`);
+        return(`${d.abbr}<br> Median Age: ${d.age}<br>Smokers %: ${d.smokes}`); //directions require state abbr
       }); //THIS GIVES YOU TEXT WHEN YOU CLICK ON A BUBBLE 
 
       chartGroup.call(toolTip); 
@@ -94,19 +95,19 @@ d3.csv("data.csv").then(function(yourData) {
         toolTip.hide(data);
       });
 
-          // Create axes labels
+    // Create axes labels
     chartGroup.append("text")
     .attr("transform", "rotate(-90)")
-    .attr("y", 0 - margin.left + 40)
-    .attr("x", 0 - (height / 2))
+    .attr("y", 0 - margin.left -6) //mess with this
+    .attr("x", 0 - (height / 2)) //this centers it
     .attr("dy", "1em")
     .attr("class", "axisText")
     .text("Smokers (%)");
 
   chartGroup.append("text")
-    .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
+    .attr("transform", `translate(${width / 2}, ${height + margin.top +1})`) //mess with this 
     .attr("class", "axisText")
-    .text("Median Age");
+    .text("Median Age (years)");
     }).catch(function(error) {
     console.log(error);
 
