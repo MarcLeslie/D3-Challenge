@@ -4,8 +4,8 @@ var svgHeight = 600;
 var margin = {
   top: 30,
   right: 30,
-  bottom: 40,
-  left: 45
+  bottom: 40, //must leave this way so that axis labels can show up
+  left: 45 //must leave this way so that axis labels can show up
 };
 
 var width = svgWidth - margin.left - margin.right;
@@ -79,6 +79,13 @@ d3.csv("data.csv").then(function(yourData) {
         .attr("fill", "red")
         .style("stroke" , "black") //adds border to circles 
         .attr("opacity" , ".8"); 
+
+    //Add in state abbr text to the inside of the circle 
+   //WORK ON SPACING SO THERE IS NOT SO MUCH OVERLAP 
+  
+   
+
+
 
    // Initialize tool tip, event listeners, etc.
     var toolTip = d3.tip()
