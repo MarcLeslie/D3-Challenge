@@ -2,10 +2,10 @@ var svgWidth = 970;
 var svgHeight = 600;
 
 var margin = {
-  top: 28,
-  right: 28,
-  bottom: 28,
-  left: 28
+  top: 30,
+  right: 30,
+  bottom: 40,
+  left: 45
 };
 
 var width = svgWidth - margin.left - margin.right;
@@ -101,7 +101,7 @@ d3.csv("data.csv").then(function(yourData) {
     // Create axes labels
     chartGroup.append("text")
     .attr("transform", "rotate(-90)")
-    .attr("y", 0 - margin.left -9) //mess with this
+    .attr("y", 0 - margin.left -5) //mess with this
     .attr("x", 0 - (height / 2)) //this centers it
     .attr("dy", "1em")
     .attr("class", "axisText")
