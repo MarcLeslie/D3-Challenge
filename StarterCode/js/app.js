@@ -80,23 +80,18 @@ d3.csv("data.csv").then(function(yourData) {
         .style("stroke" , "black") //adds border to circles 
         .attr("opacity" , ".8"); 
 
-    //Add in state abbr text to the inside of the circle 
-   //WORK ON SPACING SO THERE IS NOT SO MUCH OVERLAP 
+   //Add in state abbr text to the inside of the circle 
 
-      var textGroup = chartGroup.selectAll(".stateText")
+      var textGroup = chartGroup.selectAll(".stateAbbr")
         .data(yourData)
         .enter()
         .append("text")
-        .classed("stateText", true)
+        .classed("stateAbbr", true) //changed D3 CSS from StateText to StateAbbr to make this make more sense 
         .attr("x", d => xLinearScale(d.smokes))
         .attr("y", d => yLinearScale(d.age))
         .attr('dy', 3)
         .attr("font-size", 12)
         .text(d => d.abbr);
-  
-   
-
-
 
    // Initialize tool tip, event listeners, etc.
     var toolTip = d3.tip()
@@ -108,6 +103,7 @@ d3.csv("data.csv").then(function(yourData) {
 
       chartGroup.call(toolTip); 
 
+      //have text show up when you hover
       circlesGroup.on("mouseover" , function(data) { //change "mouseover" to "click" if you want to click to see the text
         toolTip.show(data, this);
       })
@@ -115,6 +111,17 @@ d3.csv("data.csv").then(function(yourData) {
       .on("mouseout" , function(data, index) {
         toolTip.hide(data);
       });
+
+
+      //keep text visible when hovering over the state abbr
+      textGroup.on("mouseover" , function(data) { //change "mouseover" to "click" if you want to click to see the text
+        toolTip.show(data, this);
+      })
+      //on mouse events
+      .on("mouseout" , function(data, index) {
+        toolTip.hide(data);
+      });
+
 
     // Create axes labels
     chartGroup.append("text")
@@ -131,9 +138,4 @@ d3.csv("data.csv").then(function(yourData) {
       .text("Smokers (%)");
       }).catch(function(error) {
       console.log(error);
-    
-    // Create text for inside bubbles
-    
-  
-
 });

@@ -24,7 +24,7 @@
 }
 
 /* font size dependent on radius, see app.js */
-.stateText {
+.stateAbbr {
   font-family: sans-serif;
   fill: #fff;
   text-anchor: middle;
