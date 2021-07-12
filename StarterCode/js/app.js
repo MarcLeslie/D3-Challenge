@@ -108,7 +108,7 @@ d3.csv("data.csv").then(function(yourData) {
         toolTip.show(data, this);
       })
       //on mouse events
-      .on("mouseout" , function(data, index) {
+      .on("mouseout" , function(data) {
         toolTip.hide(data);
       });
 
@@ -118,7 +118,7 @@ d3.csv("data.csv").then(function(yourData) {
         toolTip.show(data, this);
       })
       //on mouse events
-      .on("mouseout" , function(data, index) {
+      .on("mouseout" , function(data) {
         toolTip.hide(data);
       });
 
