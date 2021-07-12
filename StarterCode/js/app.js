@@ -73,15 +73,26 @@ d3.csv("data.csv").then(function(yourData) {
         .data(yourData)
         .enter()
         .append("circle")
-        .attr("cx" , d => xLinearScale(d.smokes))
-        .attr("cy" , d => yLinearScale(d.age))
-        .attr("r" , "15") //r stands for radius
+        .attr("cx" , d => xLinearScale(d.smokes)) //THIS CREATES CIRCLES/DATA
+        .attr("cy" , d => yLinearScale(d.age)) //THIS CREATES CIRCLES/DATA
+        .attr("r" , "15") //r is radius
         .attr("fill", "red")
         .style("stroke" , "black") //adds border to circles 
         .attr("opacity" , ".8"); 
 
     //Add in state abbr text to the inside of the circle 
    //WORK ON SPACING SO THERE IS NOT SO MUCH OVERLAP 
+
+      var textGroup = chartGroup.selectAll(".stateText")
+        .data(yourData)
+        .enter()
+        .append("text")
+        .classed("stateText", true)
+        .attr("x", d => xLinearScale(d.smokes))
+        .attr("y", d => yLinearScale(d.age))
+        .attr('dy', 3)
+        .attr("font-size", 12)
+        .text(d => d.abbr);
   
    
 
@@ -92,12 +103,12 @@ d3.csv("data.csv").then(function(yourData) {
       .attr("class" , "tooltip")
       .offset([80, -60]) //MESS WITH THIS
       .html(function(d) {
-        return(`${d.abbr}<br> Median Age: ${d.age}<br>Smokers %: ${d.smokes}`); //directions require state abbr
+        return(`${d.state}<br> Median Age: ${d.age}<br>Smokers: ${d.smokes}%`); //directions require state abbr
       }); //THIS GIVES YOU TEXT WHEN YOU CLICK ON A BUBBLE 
 
       chartGroup.call(toolTip); 
 
-      circlesGroup.on("click" , function(data) {
+      circlesGroup.on("mouseover" , function(data) { //change "mouseover" to "click" if you want to click to see the text
         toolTip.show(data, this);
       })
       //on mouse events
@@ -107,19 +118,22 @@ d3.csv("data.csv").then(function(yourData) {
 
     // Create axes labels
     chartGroup.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("y", 0 - margin.left -5) //mess with this
-    .attr("x", 0 - (height / 2)) //this centers it
-    .attr("dy", "1em")
-    .attr("class", "axisText")
-    .text("Median Age (Years)");
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left -5) //mess with this
+      .attr("x", 0 - (height / 2)) //this centers it
+      .attr("dy", "1em")
+      .attr("class", "axisText")
+      .text("Median Age (Years)");
 
-  chartGroup.append("text")
-    .attr("transform", `translate(${width / 2}, ${height + margin.top +1})`) //mess with this 
-    .attr("class", "axisText")
-    .text("Smokers (%)");
-    }).catch(function(error) {
-    console.log(error);
-
+    chartGroup.append("text")
+      .attr("transform", `translate(${width / 2}, ${height + margin.top +1})`) //mess with this 
+      .attr("class", "axisText")
+      .text("Smokers (%)");
+      }).catch(function(error) {
+      console.log(error);
+    
+    // Create text for inside bubbles
+    
+  
 
 });
