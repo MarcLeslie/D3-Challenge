@@ -1,17 +1,12 @@
 var svgWidth = 970;
 var svgHeight = 600;
 
-var margin = {
-  top: 30,
-  right: 30,
-  bottom: 40, //must leave this way so that axis labels can show up
-  left: 45 //must leave this way so that axis labels can show up
-};
+var margin = {top: 30, right: 30, bottom: 40, left: 45};  //must leave bottom/left this way for axis labels to appear
 
 var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
-// Create an SVG wrapper, append an SVG group that will hold our chart, and shift the latter by left and top margins.
+// Create SVG wrapper, append SVG group that will "hold" chart, and shift the latter by left and top margins.
 var svg = d3.select("#scatter")
   .append("svg")
   .attr("width", svgWidth)
@@ -20,7 +15,7 @@ var svg = d3.select("#scatter")
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-// Import Data
+// Here comes your data!
 d3.csv("data.csv").then(function(yourData) {
 
     //Convert age and smokes to numeric data 
@@ -29,38 +24,34 @@ d3.csv("data.csv").then(function(yourData) {
         data.smokes = +data.smokes;
     }); 
 
-    console.log(yourData); //ALL the data is present now (not just smnokes and age)
+    // console.log(yourData); //ALL the data is present (not just smnokes and age)
 
-    // //looking at max and min for fun
-    // var ageMax = d3.max(yourData, function(d) { return +d.age;} );
-    // console.log(ageMax); 
-    
+    // //looking at max and min 
+    // var ageMax = d3.max(yourData, function(d) { return +d.age;} ); 
     // var ageMin= d3.min(yourData, function(d) { return +d.age;} );
-    // console.log(ageMin); 
-
     // var smokeMax = d3.max(yourData, function(d) { return +d.smokes;} );
-    // console.log(smokeMax); //max smoke % is 26.7
-
     // var smokeMin= d3.min(yourData, function(d) { return +d.smokes;} );
-    // console.log(smokeMin); //min smoke % is 9.7
-
+    // console.log(ageMax); 
+    // console.log(ageMin); 
+    // console.log(smokeMax); 
+    // console.log(smokeMin); 
     //max age is 44.1, min age is 30.5
     //max smoke % is 26.7, min smoke % is 9.7
 
     //x will be smokers, y will be age
     var xLinearScale = d3.scaleLinear()
-        .domain([d3.min (yourData, d => d.smokes) -1  , d3.max(yourData, d => d.smokes) +2 ]) //9 seems to get the circles into the right spot - 9.7 is the min smoker %
-        .range([0, width]);  // NO IDEA IF 0 IS THE RIGHT NUMBER
+        .domain([d3.min (yourData, d => d.smokes) -1  , d3.max(yourData, d => d.smokes) +2 ]) //-1 and +2 help get the axis in better alignment
+        .range([0, width]);  
     
     var yLinearScale = d3.scaleLinear()
-        .domain([d3.min(yourData, d => d.age) -1 , d3.max(yourData, d => d.age) +2]) //NO IDEA IF 0 IS THE RIGHT NUMBER
-        .range([height, 0]);  // NO IDEA IF 0 IS THE RIGHT NUMBERS 
+        .domain([d3.min(yourData, d => d.age) -1 , d3.max(yourData, d => d.age) +2]) //-1 and +2 help get the axis in better alignment
+        .range([height, 0]); 
 
     //axis functions
     var bottomAxis = d3.axisBottom(xLinearScale); 
     var leftAxis = d3.axisLeft(yLinearScale); 
 
-    //append axes to chart
+    //append axes to chart, and yes, these must be done as separate actions for some reason 
     chartGroup.append("g")
         .attr("transform" , `translate(0, ${height})`)
         .call(bottomAxis); 
@@ -73,20 +64,19 @@ d3.csv("data.csv").then(function(yourData) {
         .data(yourData)
         .enter()
         .append("circle")
-        .attr("cx" , d => xLinearScale(d.smokes)) //THIS CREATES CIRCLES/DATA
-        .attr("cy" , d => yLinearScale(d.age)) //THIS CREATES CIRCLES/DATA
+        .attr("cx" , d => xLinearScale(d.smokes)) //Creates circles/data
+        .attr("cy" , d => yLinearScale(d.age)) //Creates circles/data
         .attr("r" , "15") //r is radius
         .attr("fill", "red")
-        .style("stroke" , "black") //adds border to circles 
+        .style("stroke" , "black") //adds circle borders 
         .attr("opacity" , ".8"); 
 
    //Add in state abbr text to the inside of the circle 
-
-      var textGroup = chartGroup.selectAll(".stateAbbr")
+    var textGroup = chartGroup.selectAll(".stateAbbr")
         .data(yourData)
         .enter()
         .append("text")
-        .classed("stateAbbr", true) //changed D3 CSS from StateText to StateAbbr to make this make more sense 
+        .classed("stateAbbr", true) //changed D3 CSS from stateText to stateAbbr to make this make more sense to me
         .attr("x", d => xLinearScale(d.smokes))
         .attr("y", d => yLinearScale(d.age))
         .attr('dy', 3)
@@ -94,12 +84,12 @@ d3.csv("data.csv").then(function(yourData) {
         .text(d => d.abbr);
 
    // Initialize tool tip, event listeners, etc.
-    var toolTip = d3.tip()
+    var toolTip = d3.tip() //Produces hover text over the circles 
       .attr("class" , "tooltip")
-      .offset([80, -60]) //MESS WITH THIS
+      .offset([80, -60]) 
       .html(function(d) {
-        return(`${d.state}<br> Median Age: ${d.age}<br>Smokers: ${d.smokes}%`); //directions require state abbr
-      }); //THIS GIVES YOU TEXT WHEN YOU CLICK ON A BUBBLE 
+        return(`${d.state}<br> Median Age: ${d.age}<br>Smokers: ${d.smokes}%`); 
+      }); 
 
       chartGroup.call(toolTip); 
 
@@ -113,7 +103,7 @@ d3.csv("data.csv").then(function(yourData) {
       });
 
 
-      //keep text visible when hovering over the state abbr
+      //keep text visible when hovering over the state abbr text
       textGroup.on("mouseover" , function(data) { //change "mouseover" to "click" if you want to click to see the text
         toolTip.show(data, this);
       })
